@@ -17,6 +17,48 @@ def check_version():
     return __version__
 
 
+def check_reference(reference: str, dataframe=True):
+    '''
+    Shows reference unit table
+
+    Parameters
+    ----------
+    reference : str
+        reference name such as pressure, temperature, custom
+
+    Returns
+    -------
+    reference : dict | dataframe
+        reference details
+
+    Notes
+    ------
+    1. The reference can be set to 'PRESSURE', 'TEMPERATURE', 'CUSTOM'
+
+    Examples
+    --------
+    >>> # ! pressure
+    >>> print(pycuc.check_reference('pressure'))
+
+    >>> # ! temperature
+    >>> print(pycuc.check_reference('temperature'))
+
+    >>> # ! custom
+    >>> print(pycuc.check_reference('custom'))
+    '''
+    try:
+        # check reference
+        if isinstance(reference, str) and len(reference) > 0:
+            cucC = CustomUnitConverter('', '')
+            # check reference
+            return cucC.check_reference(reference, dataframe)
+        else:
+            raise Exception('Reference not provided!')
+
+    except Exception as e:
+        raise Exception('Checking references failed!, ', e)
+
+
 def create_cuc(value: float, unit: str) -> CustomUnitConverter:
     '''
     Define a CustomUnitConverter object

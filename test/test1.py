@@ -4,6 +4,12 @@ import pycuc
 # check version
 print(pycuc.__version__)
 
+
+# =====================================
+# CHECK REFERENCES
+# =====================================
+print(pycuc.check_reference('pressure'))
+
 # =====================================
 # CREATE A CUSTOM UNIT CONVERTER
 # =====================================
