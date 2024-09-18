@@ -29,6 +29,12 @@ print(pycuc.__version__)
 
 ## Usage Example
 
+* CHECK REFERENCES
+
+```python
+print(pycuc.check_reference('pressure'))
+```
+
 * CREATE A CUSTOM UNIT CONVERTER
 
 ```python
