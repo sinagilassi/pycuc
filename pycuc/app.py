@@ -39,14 +39,18 @@ def create_cuc(value: float, unit: str) -> CustomUnitConverter:
     >>> my_cuc_1 = pycuc.create_cuc(1, 'MPa')
     >>> # convert to Pa
     >>> print(my_cuc_1.convert('Pa'))
+
     >>> print(my_cuc_1.convert('bar'))
+
     >>> print(my_cuc_1.convert('kPa'))
     >>>
     >>> # ! temperature
     >>> my_cuc_2 = pycuc.create_cuc(358, 'K')
     >>> # convert to K
     >>> print(my_cuc_2.convert('C'))
+
     >>> print(my_cuc_2.convert('F'))
+
     >>> print(my_cuc_2.convert('R'))
     >>>
     >>> # ! heat capacity unit: J/mol.K
@@ -54,6 +58,7 @@ def create_cuc(value: float, unit: str) -> CustomUnitConverter:
     >>> # add custom
     >>> my_cuc_3.add_custom_unit('J/mol.K', 1)
     >>> my_cuc_3.add_custom_unit('kJ/mol.K', 1000)
+
     >>> # conversion
     >>> print(my_cuc_3.convert('J/mol.K'))
     >>> print(my_cuc_3.convert('kJ/mol.K'))

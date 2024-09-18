@@ -1,0 +1,3 @@
+# Docs
+
+::: pycuc.docs.cuc
