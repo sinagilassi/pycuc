@@ -7,7 +7,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-APP_NAME = 'Python Custom Unit Converter'
+APP_NAME = 'PyCUC'
 VERSION = '1.0.0'
 DESCRIPTION = 'PyCUC: A lightweight Python package for creating custom unit conversions.'
 LONG_DESCRIPTION = "PyCUC: A lightweight Python package for creating custom unit conversions. Easily define and convert between units with simplicity and flexibility"
