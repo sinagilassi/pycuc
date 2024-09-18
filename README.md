@@ -1,2 +1,2 @@
-# pycuc
+# PyCUC
 Python Custom Unit Converter
