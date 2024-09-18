@@ -35,6 +35,17 @@ print("-"*50)
 
 
 # =====================================
+# CONVERT FROM TO (short format)
+# =====================================
+# ! pressure
+print(pycuc.to(125, 'MPa => Pa'))
+# ! temperature
+print(pycuc.to(360, 'K => C'))
+print(pycuc.to(250, 'C => K'))
+print("-"*50)
+
+
+# =====================================
 # ADD A NEW UNIT
 # =====================================
 # ! heat capacity unit: J/mol.K

@@ -1,7 +1,7 @@
 # import packages/modules
 
 # local
-from .docs import CustomUnitConverter
+from .docs import CustomUnitConverter, Utils
 from .config import __version__
 
 
@@ -107,6 +107,49 @@ def convert_from_to(value: float, from_unit: str, to_unit: str, reference=None) 
 
         # conversion
         return CustomUnitConverterC.convert(to_unit, reference)
+
+    except Exception as e:
+        raise Exception('Conversion failed, ', e)
+
+
+def to(value: float, unit_conversion_block: str, reference=None) -> float:
+    '''
+    Convert a value from one unit to another using `unit conversion block`
+
+    Parameters
+    ----------
+    value : float
+        The value to be converted
+    unit_conversion_block : str
+        The block shows `(from_unit => to_unit)` such as (MPa => Pa), (K => C)
+    reference : str, optional
+        The reference name such as 'PRESSURE', 'TEMPERATURE', 'CUSTOM'
+
+    Returns
+    -------
+    float
+        The converted value
+
+    Notes
+    ------
+    1. The reference can be set to 'PRESSURE', 'TEMPERATURE', 'CUSTOM'
+    2. If reference is None, then automatically set a value 
+
+    Examples
+    --------
+    >>> # ! pressure
+    >>> print(pycuc.to(1, 'MPa => Pa'))
+    >>> 
+    >>> # ! temperature
+    >>> print(pycuc.to(358, 'K => C'))
+    >>> print(pycuc.to(25, 'C => K'))
+    '''
+    try:
+        # check conversion block
+        from_unit, block_symbol, to_unit = Utils(
+        ).parse_conversion_block(unit_conversion_block)
+
+        return convert_from_to(value, from_unit, to_unit, reference)
 
     except Exception as e:
         raise Exception('Conversion failed, ', e)

@@ -4,9 +4,10 @@
 # import packages/modules
 import pandas as pd
 # local
+from .utils import Utils
 
 
-class CustomUnitConverter:
+class CustomUnitConverter(Utils):
     # vars
     _pressure_conversions = {
         'bar': 1.0,
@@ -40,6 +41,8 @@ class CustomUnitConverter:
     def __init__(self, value, unit):
         self.value = value
         self.unit = unit
+        # utils init
+        super().__init__()
 
     def check_reference(self, reference, dataframe=True):
         '''
@@ -117,6 +120,25 @@ class CustomUnitConverter:
             return reference
         except Exception as e:
             raise Exception('Finding reference failed!, ', e)
+
+    def check_conversion_block(self, conversion_block):
+        '''
+        Checks conversion block
+
+        Parameters
+        ----------
+        conversion_block : str
+            conversion block
+
+        Returns
+        -------
+        subgroups : list
+            list of subgroups. [0] = from_unit, [1] = '=>', [2] = to_unit
+        '''
+        try:
+            return self.parse_conversion_block(conversion_block)
+        except Exception as e:
+            raise Exception("Checking conversion block failed!, ", e)
 
     def convert(self, to_unit, reference=None):
         '''
