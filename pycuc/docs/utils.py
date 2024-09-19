@@ -1,5 +1,7 @@
 # import module/packages
 import re
+import os
+import yaml
 
 
 class Utils:
@@ -40,3 +42,38 @@ class Utils:
                 raise ValueError("Input string does not contain '=>'")
         except Exception as e:
             raise Exception('Parsing conversion failed!, ', e)
+
+    def _load_custom_conversion_unit(self, f):
+        '''
+        Load custom conversion unit
+
+        Parameters
+        ----------
+        f : str
+            yml file path
+
+        Returns
+        -------
+        dict
+            custom conversion unit
+        '''
+        try:
+            # custom unit
+            custom_unit = {}
+
+            # check file path
+            if not os.path.exists(f):
+                raise ValueError("File not found")
+
+            # check format
+            if not f.endswith('.yml'):
+                raise ValueError("File format not supported")
+
+            # read yml file
+            with open(f, 'r') as file:
+                custom_unit = yaml.safe_load(file)
+
+            return custom_unit
+
+        except Exception as e:
+            raise Exception('Loading custom conversion unit failed!, ', e)

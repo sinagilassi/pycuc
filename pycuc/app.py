@@ -109,7 +109,7 @@ def create_cuc(value: float, unit: str) -> CustomUnitConverter:
     return CustomUnitConverter(value, unit)
 
 
-def convert_from_to(value: float, from_unit: str, to_unit: str, reference=None) -> float:
+def convert_from_to(value: float, from_unit: str, to_unit: str, reference=None, reference_file=None) -> float:
     '''
     Convert a value from one unit to another
 
@@ -123,6 +123,8 @@ def convert_from_to(value: float, from_unit: str, to_unit: str, reference=None) 
         The unit to convert to
     reference : str, optional
         The reference name such as 'PRESSURE', 'TEMPERATURE', 'CUSTOM'
+    reference_file : str, optional
+        The path to the reference file
 
     Returns
     -------
@@ -154,7 +156,7 @@ def convert_from_to(value: float, from_unit: str, to_unit: str, reference=None) 
         raise Exception('Conversion failed, ', e)
 
 
-def to(value: float, unit_conversion_block: str, reference=None) -> float:
+def to(value: float, unit_conversion_block: str, reference=None, reference_file=None) -> float:
     '''
     Convert a value from one unit to another using `unit conversion block`
 
@@ -166,6 +168,8 @@ def to(value: float, unit_conversion_block: str, reference=None) -> float:
         The block shows `(from_unit => to_unit)` such as (MPa => Pa), (K => C)
     reference : str, optional
         The reference name such as 'PRESSURE', 'TEMPERATURE', 'CUSTOM'
+    reference_file : str, optional
+        The reference file path
 
     Returns
     -------
@@ -175,7 +179,7 @@ def to(value: float, unit_conversion_block: str, reference=None) -> float:
     Notes
     ------
     1. The reference can be set to 'PRESSURE', 'TEMPERATURE', 'CUSTOM'
-    2. If reference is None, then automatically set a value 
+    2. If reference is None, then automatically set a value
 
     Examples
     --------

@@ -1,0 +1,11 @@
+CUSTOM-UNIT:
+  HEAT-CAPACITY:
+    J/mol.K : 1
+    kJ/mol.K : 0.001
+    J/kmol.K : 1000
+  ENERGY:
+    J/mol : 1
+    kJ/mol : 0.001
+    J/kmol : 1000
+    kcal/mol: 0.000239006
+    cal/mol: 0.239006

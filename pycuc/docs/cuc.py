@@ -38,9 +38,14 @@ class CustomUnitConverter(Utils):
     # Initialize empty custom conversions dictionary
     _custom_conversions = {}
 
+    # load conversion unit
+    _custom_conversions_full = {
+        'CUSTOM': _custom_conversions
+    }
+
     def __init__(self, value, unit):
         self.value = value
-        self.unit = unit
+        self.unit = str(unit).strip()
         # utils init
         super().__init__()
 
@@ -62,19 +67,38 @@ class CustomUnitConverter(Utils):
             # set
             reference = str(reference).strip().upper()
 
+            # sub reference
+            sub_reference = None
+            if '::' in reference:
+                # split
+                reference_split = reference.split('::')
+                # set
+                reference = reference_split[1]
+                sub_reference = reference
+
             # refs
             refs = {
                 'PRESSURE': self._pressure_conversions,
                 'TEMPERATURE': self._temperature_conversions,
-                'CUSTOM': self._custom_conversions
+                'CUSTOM': self._custom_conversions_full
             }
 
+            # take all keys
+            custom_keys = list(self._custom_conversions_full.keys())
+            # all keys
+            all_keys = list(set(list(refs.keys()) + custom_keys))
+
             # check
-            if reference not in refs.keys():
+            if reference not in all_keys:
                 raise Exception('Reference not found')
 
-            # dict
-            res = refs[reference]
+            # if contain ::
+            if sub_reference:
+                # set
+                res = self._custom_conversions_full[sub_reference]
+            else:
+                # dict
+                res = refs[reference]
 
             if dataframe:
                 # Convert dictionary to DataFrame
@@ -104,7 +128,7 @@ class CustomUnitConverter(Utils):
         '''
         try:
             # reference
-            reference = ''
+            reference = None
             # pressure
             if from_unit in self._pressure_conversions and to_unit in self._pressure_conversions:
                 reference = 'PRESSURE'
@@ -115,6 +139,13 @@ class CustomUnitConverter(Utils):
             elif from_unit in self._custom_conversions and to_unit in self._custom_conversions:
                 reference = 'CUSTOM'
             else:
+                # check
+                for key, value in self._custom_conversions_full.items():
+                    if from_unit in value and to_unit in value:
+                        reference = 'CUSTOM'
+
+            # check
+            if reference is None:
                 raise Exception('Conversion units not found')
 
             return reference
@@ -274,6 +305,41 @@ class CustomUnitConverter(Utils):
         except Exception as e:
             raise Exception('Adding new unit failed!, ', e)
 
+    def load_custom_unit(self, f):
+        '''
+        Load custom unit
+
+        Parameters
+        ----------
+        f : str
+            yml file path
+
+        Returns
+        -------
+        dict
+            custom unit
+        '''
+        try:
+            # custom unit
+            custom_unit = self._load_custom_conversion_unit(f)
+
+            # if not empty
+            if len(custom_unit) == 0:
+                return False
+
+            # check key 'CUSTOM-UNIT'
+            if 'CUSTOM-UNIT' not in custom_unit.keys():
+                raise ValueError("Key 'CUSTOM-UNIT' not found")
+
+            # update custom conversion
+            for key, value in custom_unit['CUSTOM-UNIT'].items():
+                self._custom_conversions_full[str(key).strip()] = value
+
+            return self._custom_conversions_full
+
+        except Exception as e:
+            raise Exception('Loading custom unit failed!, ', e)
+
     def convert_custom(self, to_unit):
         '''
         Converts using custom units
@@ -292,10 +358,19 @@ class CustomUnitConverter(Utils):
             # set
             from_unit = self.unit
 
-            # check
-            if from_unit not in self._custom_conversions or to_unit not in self._custom_conversions:
-                raise ValueError("Custom conversion units not found")
+            # looping through all keys in _custom_conversions_full
+            for key, custom_unit_dict in self._custom_conversions_full.items():
 
-            return float(self.value) / float(self._custom_conversions[from_unit]) * float(self._custom_conversions[to_unit])
+                # check
+                if from_unit in custom_unit_dict and to_unit in custom_unit_dict:
+                    return float(self.value) / float(custom_unit_dict[from_unit]) * float(custom_unit_dict[to_unit])
+
+            raise ValueError("Custom conversion units not found")
+
+            # check
+            # if from_unit not in self._custom_conversions or to_unit not in self._custom_conversions:
+            #     raise ValueError("Custom conversion units not found")
+
+            # return float(self.value) / float(self._custom_conversions[from_unit]) * float(self._custom_conversions[to_unit])
         except Exception as e:
             raise Exception('Conversion failed!, ', e)
