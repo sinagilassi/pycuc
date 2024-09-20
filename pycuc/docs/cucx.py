@@ -5,36 +5,15 @@
 import pandas as pd
 # local
 from .utils import Utils
+from .refs import Refs
 
 
-class CustomUnitConverter(Utils):
-    # vars
-    _pressure_conversions = {
-        'bar': 1.0,
-        'mbar': 1000.0,
-        'ubar': 1000000.0,
-        'Pa': 100000.0,
-        'hPa': 1000.0,
-        'kPa': 100.0,
-        'MPa': 0.1,
-        'kgcm2': 1.01972,
-        'atm': 0.986923,
-        'mmHg': 750.062,
-        'mmH2O': 10197.162129779,
-        'mH2O': 10.197162129779,
-        'psi': 14.5038,
-        'ftH2O': 33.455256555148,
-        'inH2O': 401.865,
-        'inHg': 29.53
-    }
+class CustomUnitConverterX(Utils, Refs):
 
-    _temperature_conversions = {
-        'C': 0,  # Celsius
-        'F': 32,  # Fahrenheit
-        'K': -273.15,  # Kelvin
-        'R': 491.67  # Rankine
-    }
-
+    # pressure
+    _pressure_conversions = {}
+    # temperature
+    _temperature_conversions = {}
     # Initialize empty custom conversions dictionary
     _custom_conversions = {}
 
@@ -48,7 +27,12 @@ class CustomUnitConverter(Utils):
         self.unit = str(unit).strip()
         self.reference_file = reference_file
         # utils init
-        super().__init__()
+        Utils().__init__()
+        Refs().__init__()
+
+        # init vars
+        self._pressure_conversions = self.pressure_conversions_ref
+        self._temperature_conversions = self.temperature_conversions_ref
 
     def check_reference(self, reference, dataframe=True):
         '''
@@ -172,12 +156,37 @@ class CustomUnitConverter(Utils):
         except Exception as e:
             raise Exception("Checking conversion block failed!, ", e)
 
-    def convert(self, to_unit, reference=None):
+    def from_to(self, value, from_unit, to_unit, reference=None):
+        '''
+        Converts from one unit to another
+
+        Parameters
+        ----------
+        value : float
+            value
+        from_unit : str
+            from unit
+        to_unit : str
+            to unit
+        '''
+        try:
+            # convert
+            return self.convert(value, from_unit, to_unit, reference)
+        except Exception as e:
+            raise Exception('Conversion failed!, ', e)
+
+    def convert(self, value, from_unit, to_unit, reference=None):
         '''
         Selects the conversion function
 
         Parameters
         ----------
+        value: float
+            value
+        from_unit : str
+            from unit
+        to_unit : str
+            to unit
         reference : str
             reference name such as pressure, temperature, custom
         '''
@@ -202,9 +211,9 @@ class CustomUnitConverter(Utils):
 
             # reference
             ref_methods = {
-                'PRESSURE': lambda x: self.convert_pressure(x),
-                'TEMPERATURE': lambda x: self.convert_temperature(x),
-                'CUSTOM': lambda x: self.convert_custom(x)
+                'PRESSURE': lambda x, y, z: self.convert_pressure(x, y, z),
+                'TEMPERATURE': lambda x, y, z: self.convert_temperature(x, y, z),
+                'CUSTOM': lambda x, y, z: self.convert_custom(x, y, z)
             }
 
             # check
@@ -212,18 +221,22 @@ class CustomUnitConverter(Utils):
                 raise Exception('Reference not found')
 
             # set
-            res = ref_methods[reference](to_unit)
+            res = ref_methods[reference](value, from_unit, to_unit)
 
             return res
         except Exception as e:
             raise Exception('Setting conversion function failed!, ', e)
 
-    def convert_pressure(self, to_unit):
+    def convert_pressure(self, value, from_unit, to_unit):
         '''
         Converts pressure from one unit to another.
 
         Parameters
         ----------
+        value : float
+            value
+        from_unit : str
+            from unit
         to_unit : str
             to unit
 
@@ -233,19 +246,21 @@ class CustomUnitConverter(Utils):
             converted value
         '''
         try:
-            # set
-            from_unit = self.unit
             # res
-            return float(self.value) / float(self._pressure_conversions[from_unit]) * float(self._pressure_conversions[to_unit])
+            return float(value) / float(self._pressure_conversions[from_unit]) * float(self._pressure_conversions[to_unit])
         except Exception as e:
             raise Exception('Pressure conversion failed!, ', e)
 
-    def convert_temperature(self, to_unit):
+    def convert_temperature(self, value, from_unit, to_unit):
         '''
         Converts temperature from one unit to another.
 
         Parameters
         ----------
+        value : float
+            value
+        from_unit : str
+            from unit
         to_unit : str
             to unit
 
@@ -256,8 +271,7 @@ class CustomUnitConverter(Utils):
         '''
         try:
             # set
-            from_unit = self.unit
-            value = float(self.value)
+            value = float(value)
 
             # Convert to Celsius first
             if from_unit == 'F':
@@ -341,12 +355,16 @@ class CustomUnitConverter(Utils):
         except Exception as e:
             raise Exception('Loading custom unit failed!, ', e)
 
-    def convert_custom(self, to_unit):
+    def convert_custom(self, value, from_unit, to_unit):
         '''
         Converts using custom units
 
         Parameters
         ----------
+        value : float
+            value
+        from_unit : str
+            from unit
         to_unit : str
             to unit
 
@@ -356,22 +374,13 @@ class CustomUnitConverter(Utils):
             converted value
         '''
         try:
-            # set
-            from_unit = self.unit
-
             # looping through all keys in _custom_conversions_full
             for key, custom_unit_dict in self._custom_conversions_full.items():
 
                 # check
                 if from_unit in custom_unit_dict and to_unit in custom_unit_dict:
-                    return float(self.value) / float(custom_unit_dict[from_unit]) * float(custom_unit_dict[to_unit])
+                    return float(value) / float(custom_unit_dict[from_unit]) * float(custom_unit_dict[to_unit])
 
             raise ValueError("Custom conversion units not found")
-
-            # check
-            # if from_unit not in self._custom_conversions or to_unit not in self._custom_conversions:
-            #     raise ValueError("Custom conversion units not found")
-
-            # return float(self.value) / float(self._custom_conversions[from_unit]) * float(self._custom_conversions[to_unit])
         except Exception as e:
             raise Exception('Conversion failed!, ', e)

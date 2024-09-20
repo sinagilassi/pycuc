@@ -1,7 +1,7 @@
 # import packages/modules
-
+import os
 # local
-from .docs import CustomUnitConverter, Utils
+from .docs import CustomUnitConverter, CustomUnitConverterX, Utils
 from .config import __version__
 
 
@@ -57,6 +57,57 @@ def check_reference(reference: str, dataframe=True):
 
     except Exception as e:
         raise Exception('Checking references failed!, ', e)
+
+
+def go(reference_file=None) -> CustomUnitConverterX:
+    '''
+    Initializes app with/without external yml file
+
+    Parameters
+    ----------
+    reference_file : str, optional
+        The path to the yml reference file
+
+    Returns
+    -------
+    cucx : CustomUnitConverterX
+        A CustomUnitConverterX object
+
+    Notes
+    ------
+    1. The reference can be set to 'PRESSURE', 'TEMPERATURE', 'CUSTOM'
+    2. If reference_file is not None, then the app will load the yml file
+
+    ### yml reference file format is as:
+
+    CUSTOM-UNIT:
+        HEAT-CAPACITY:
+            J/mol.K : 1
+            kJ/mol.K : 0.001
+            J/kmol.K : 1000
+        ENERGY:
+            J/mol : 1
+            kJ/mol : 0.001
+            J/kmol : 1000
+            kcal/mol: 0.000239006
+            cal/mol: 0.239006
+    '''
+    try:
+        # init
+        cucxC = CustomUnitConverterX('', '')
+        # load external custom unit
+        # check
+        if reference_file is not None:
+            # check file exists
+            if not os.path.exists(reference_file):
+                raise Exception('File not found!')
+            # load
+            cucxC.load_custom_unit(reference_file)
+
+        # return
+        return cucxC
+    except Exception as e:
+        raise Exception("Initializing failed!, ", e)
 
 
 def create_cuc(value: float, unit: str) -> CustomUnitConverter:
