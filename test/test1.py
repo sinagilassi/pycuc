@@ -36,6 +36,8 @@ print(pycuc.convert_from_to(1, 'MPa', 'Pa'))
 # ! temperature
 print(pycuc.convert_from_to(358, 'K', 'C'))
 print(pycuc.convert_from_to(25, 'C', 'K'))
+# same unit test
+print(pycuc.convert_from_to(275, 'K', 'K'))
 print("-"*50)
 
 # =====================================
@@ -46,6 +48,8 @@ print(pycuc.to(125, 'MPa => Pa'))
 # ! temperature
 print(pycuc.to(360, 'K => C'))
 print(pycuc.to(250, 'C => K'))
+# same unit test
+print(pycuc.to(275, 'K => K'))
 print("-"*50)
 
 # =====================================
