@@ -7,7 +7,7 @@ print(pycuc.__version__)
 # =====================================
 # CHECK REFERENCES
 # =====================================
-print(pycuc.check_reference('pressure'))
+print(pycuc.check_reference('PRESSURE'))
 
 # =====================================
 # CREATE A CUSTOM UNIT CONVERTER
@@ -65,11 +65,8 @@ print("-"*50)
 # CHECK REFERENCE
 # =====================================
 # ! pressure
-print(my_cuc_3.check_reference('pressure'))
+print(my_cuc_3.check_reference('PRESSURE'))
 # ! temperature
-print(my_cuc_3.check_reference('temperature'))
+print(my_cuc_3.check_reference('TEMPERATURE'))
 # ! custom
-print(my_cuc_3.check_reference('custom'))
-# ! from yml file
-print(my_cuc_3.check_reference('custom::HEAT-CAPACITY'))
-print(my_cuc_3.check_reference('custom::ENERGY'))
+print(my_cuc_3.check_reference('CUSTOM'))

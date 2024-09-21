@@ -101,6 +101,39 @@ print(my_cuc_3.check_reference('temperature'))
 print(my_cuc_3.check_reference('custom'))
 ```
 
+## Usage Examples 2
+
+* LOAD `CUSTOM UNIT` FROM `YML FILES`
+
+```python
+# load unit yml file
+unit_file = os.path.join(os.getcwd(), 'test', 'custom-unit.yml')
+my_cuc = pycuc.go(reference_file=unit_file)
+```
+
+* `from_to` METHOD AS:
+
+```python
+# ! pressure
+print(my_cuc.from_to(1, 'MPa', 'Pa'))
+```
+
+* `to` METHOD AS:
+
+```python
+# ! pressure
+print(my_cuc.to(125, 'MPa => Pa'))
+```
+
+* CHECK REFERENCES:
+
+```python
+# ! from yml file
+print(my_cuc.check_reference('custom::CUSTOM'))
+print(my_cuc.check_reference('custom::HEAT-CAPACITY'))
+print(my_cuc.check_reference('custom::ENERGY'))
+```
+
 ## FAQ
 
 For any question, contact me on [LinkedIn](https://www.linkedin.com/in/sina-gilassi/) 

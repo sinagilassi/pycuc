@@ -82,6 +82,8 @@ class CustomUnitConverter(Utils, Refs):
             if sub_reference:
                 # set
                 res = self._custom_conversions_full[sub_reference]
+            elif reference == 'CUSTOM':
+                res = self._custom_conversions_full['CUSTOM']
             else:
                 # dict
                 res = refs[reference]

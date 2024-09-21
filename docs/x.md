@@ -1,0 +1,3 @@
+# CUCX 
+
+::: pycuc.docs.cucx
