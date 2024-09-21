@@ -5,35 +5,15 @@
 import pandas as pd
 # local
 from .utils import Utils
+from .refs import Refs
 
 
-class CustomUnitConverter(Utils):
+class CustomUnitConverter(Utils, Refs):
     # vars
-    _pressure_conversions = {
-        'bar': 1.0,
-        'mbar': 1000.0,
-        'ubar': 1000000.0,
-        'Pa': 100000.0,
-        'hPa': 1000.0,
-        'kPa': 100.0,
-        'MPa': 0.1,
-        'kgcm2': 1.01972,
-        'atm': 0.986923,
-        'mmHg': 750.062,
-        'mmH2O': 10197.162129779,
-        'mH2O': 10.197162129779,
-        'psi': 14.5038,
-        'ftH2O': 33.455256555148,
-        'inH2O': 401.865,
-        'inHg': 29.53
-    }
-
-    _temperature_conversions = {
-        'C': 0,  # Celsius
-        'F': 32,  # Fahrenheit
-        'K': -273.15,  # Kelvin
-        'R': 491.67  # Rankine
-    }
+    # pressure
+    _pressure_conversions = {}
+    # temperature
+    _temperature_conversions = {}
 
     # Initialize empty custom conversions dictionary
     _custom_conversions = {}
@@ -49,6 +29,11 @@ class CustomUnitConverter(Utils):
         self.reference_file = reference_file
         # utils init
         super().__init__()
+        Refs().__init__()
+
+        # init vars
+        self._pressure_conversions = self.pressure_conversions_ref
+        self._temperature_conversions = self.temperature_conversions_ref
 
     def check_reference(self, reference, dataframe=True):
         '''
