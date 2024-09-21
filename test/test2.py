@@ -1,4 +1,5 @@
 # import packages/modules
+import os
 import pycuc
 
 # check version
@@ -12,16 +13,18 @@ print(pycuc.check_reference('pressure'))
 # =====================================
 # LOAD CUSTOM UNIT FROM YML
 # =====================================
-my_cuc = pycuc.go()
+# load unit yml file
+unit_file = os.path.join(os.getcwd(), 'test', 'custom-unit.yml')
+my_cuc = pycuc.go(reference_file=unit_file)
 
 # =====================================
 # CONVERT FROM TO
 # =====================================
 # ! pressure
-print(my_cuc.convert_from_to(1, 'MPa', 'Pa'))
+print(my_cuc.from_to(1, 'MPa', 'Pa'))
 # ! temperature
-print(my_cuc.convert_from_to(358, 'K', 'C'))
-print(my_cuc.convert_from_to(25, 'C', 'K'))
+print(my_cuc.from_to(358, 'K', 'C'))
+print(my_cuc.from_to(25, 'C', 'K'))
 print("-"*50)
 
 # =====================================
@@ -38,13 +41,11 @@ print("-"*50)
 # ADD A NEW UNIT
 # =====================================
 # ! heat capacity unit: J/mol.K
-my_cuc_3 = pycuc.create_cuc(25, 'J/mol.K')
 # add custom
-my_cuc_3.add_custom_unit('J/mol.K', 1)
-my_cuc_3.add_custom_unit('kJ/mol.K', 1000)
+my_cuc.add_custom_unit('J/mol.K', 1)
+my_cuc.add_custom_unit('kJ/mol.K', 1000)
 # conversion
-# print(my_cuc_3.convert('J/mol.K'))
-# print(my_cuc_3.convert('kJ/mol.K'))
+print(my_cuc.from_to(150, 'J/mol.K', 'kJ/mol.K'))
 print("-"*50)
 
 # =====================================
@@ -57,5 +58,6 @@ print(my_cuc.check_reference('temperature'))
 # ! custom
 print(my_cuc.check_reference('custom'))
 # ! from yml file
+print(my_cuc.check_reference('custom::CUSTOM'))
 print(my_cuc.check_reference('custom::HEAT-CAPACITY'))
 print(my_cuc.check_reference('custom::ENERGY'))

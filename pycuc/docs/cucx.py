@@ -22,7 +22,7 @@ class CustomUnitConverterX(Utils, Refs):
         'CUSTOM': _custom_conversions
     }
 
-    def __init__(self, value, unit, reference_file=''):
+    def __init__(self, value, unit, reference_file=None):
         self.value = value
         self.unit = str(unit).strip()
         self.reference_file = reference_file
@@ -93,7 +93,7 @@ class CustomUnitConverterX(Utils, Refs):
             else:
                 return res
         except Exception as e:
-            raise Exception('Checking references failed!, ', e)
+            raise Exception(f'Checking {reference} failed!, ', e)
 
     def find_reference(self, from_unit, to_unit):
         '''
@@ -156,6 +156,29 @@ class CustomUnitConverterX(Utils, Refs):
         except Exception as e:
             raise Exception("Checking conversion block failed!, ", e)
 
+    def to(self, value, unit_conversion_block, reference=None):
+        '''
+        Converts through a unit conversion block 
+
+        Parameters
+        ----------
+        value : float
+            value
+        unit_conversion_block : str
+            unit conversion block
+        reference : str
+            reference name such as pressure, temperature, custom
+        '''
+        try:
+            # interpret the unit conversion block
+            from_unit, _, to_unit = self.check_conversion_block(
+                unit_conversion_block)
+
+            # convert
+            return self.convert(value, from_unit, to_unit, reference)
+        except Exception as e:
+            raise Exception('Conversion failed!, ', e)
+
     def from_to(self, value, from_unit, to_unit, reference=None):
         '''
         Converts from one unit to another
@@ -188,12 +211,12 @@ class CustomUnitConverterX(Utils, Refs):
         to_unit : str
             to unit
         reference : str
-            reference name such as pressure, temperature, custom
+            reference name such as PRESSURE, TEMPERATURE, CUSTOM
         '''
         try:
             # find reference
             if reference is None:
-                reference = self.find_reference(self.unit, to_unit)
+                reference = self.find_reference(from_unit, to_unit)
 
             # upper
             reference = reference.upper()
@@ -335,6 +358,9 @@ class CustomUnitConverterX(Utils, Refs):
             custom unit
         '''
         try:
+            # update
+            self.reference_file = f
+
             # custom unit
             custom_unit = self._load_custom_conversion_unit(f)
 
