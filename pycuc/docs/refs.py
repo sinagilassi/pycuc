@@ -24,10 +24,15 @@ class Refs:
 
     # SECTION: Amount Conversions
     _amount_conversions_ref = {
-        "mol": 1.0,
-        "mmol": 1000.0,
-        "umol": 1_000_000.0,
-        "kmol": 0.001,
+        "mol": 1.0,          # ! base unit
+        "kmol": 1.0e-3,
+        "mmol": 1.0e3,
+        # micro
+        "umol": 1.0e6,      # ASCII u
+        "mumol": 1.0e6,     # ASCII mu
+        "μmol": 1.0e6,      # Greek mu
+        "nmol": 1.0e9,
+        "pmol": 1.0e12,
     }
 
     # SECTION: Pressure Conversions
