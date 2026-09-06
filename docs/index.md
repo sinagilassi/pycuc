@@ -1,5 +1,10 @@
 # 🧪 PyCUC
 
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/pycuc?period=monthly&units=INTERNATIONAL_SYSTEM&left_color=GREY&right_color=GREEN&left_text=downloads%2Fmonth)](https://pepy.tech/projects/pycuc)
+![PyPI](https://img.shields.io/pypi/v/PyCUC)
+![Python Version](https://img.shields.io/pypi/pyversions/PyCUC.svg)
+![License](https://img.shields.io/pypi/l/PyCUC)
+
 PyCUC is a Python unit-conversion package for chemical and process engineering.
 
 | Use case | API | Best for |
