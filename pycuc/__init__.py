@@ -1,3 +1,13 @@
+
+# NOTE: Config
+from .config import (
+    __author__,
+    __version__,
+    __description__,
+    __email__
+)
+
+# NOTE: App
 from .app import (
     create_cuc,
     convert_from_to,
@@ -8,46 +18,6 @@ from .app import (
     go,
     all_units,
     is_unit_available
-)
-from .canonical import (
-    to_K,
-    to_Pa,
-    to_m,
-    to_m2,
-    to_m3,
-    to_kg,
-    to_mol,
-    to_s,
-    to_J,
-    to_W,
-    to_kg_per_m3,
-    to_mol_per_m3,
-    to_mol_per_kg,
-    to_kg_per_mol,
-    to_m3_per_mol,
-    to_m3_per_kg,
-    to_kg_per_s,
-    to_mol_per_s,
-    to_m3_per_s,
-    to_m_per_s,
-    to_J_per_mol,
-    to_J_per_kg,
-    to_J_per_mol_K,
-    to_J_per_kg_K,
-    to_Pa_s,
-    to_m2_per_s,
-    to_W_per_m_K,
-    to_W_per_m2_K,
-    to_mol_per_m2_s,
-    to_kg_per_m2_s,
-    to_mol_per_m3_s,
-    to_mol_per_m2_s_Pa,
-)
-from .config import (
-    __author__,
-    __version__,
-    __description__,
-    __email__
 )
 
 __all__ = [
@@ -64,36 +34,4 @@ __all__ = [
     '__email__',
     'all_units',
     'is_unit_available',
-    'to_K',
-    'to_Pa',
-    'to_m',
-    'to_m2',
-    'to_m3',
-    'to_kg',
-    'to_mol',
-    'to_s',
-    'to_J',
-    'to_W',
-    'to_kg_per_m3',
-    'to_mol_per_m3',
-    'to_mol_per_kg',
-    'to_kg_per_mol',
-    'to_m3_per_mol',
-    'to_m3_per_kg',
-    'to_kg_per_s',
-    'to_mol_per_s',
-    'to_m3_per_s',
-    'to_m_per_s',
-    'to_J_per_mol',
-    'to_J_per_kg',
-    'to_J_per_mol_K',
-    'to_J_per_kg_K',
-    'to_Pa_s',
-    'to_m2_per_s',
-    'to_W_per_m_K',
-    'to_W_per_m2_K',
-    'to_mol_per_m2_s',
-    'to_kg_per_m2_s',
-    'to_mol_per_m3_s',
-    'to_mol_per_m2_s_Pa',
 ]
