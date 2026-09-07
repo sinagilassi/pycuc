@@ -21,6 +21,11 @@ def to_Pa(value: float, from_unit: str) -> float:
     return from_to(value, from_unit, "Pa")
 
 
+def to_bar(value: float, from_unit: str) -> float:
+    """Convert pressure to bar (bar)."""
+    return from_to(value, from_unit, "bar")
+
+
 def to_m(value: float, from_unit: str) -> float:
     """Convert length to metre (m)."""
     return from_to(value, from_unit, "m")
@@ -184,6 +189,7 @@ def to_mol_per_m2_s_Pa(value: float, from_unit: str) -> float:
 __all__ = [
     "to_K",
     "to_Pa",
+    "to_bar",
     "to_m",
     "to_m2",
     "to_m3",
