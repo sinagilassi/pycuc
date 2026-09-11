@@ -5,7 +5,7 @@ from fractions import Fraction
 from typing import Mapping, Protocol, runtime_checkable
 
 from .compatibility import require_compatible
-from .parser import unit
+from .parser import parse_unit
 from .unit import UnitExpr, to_fraction
 
 
@@ -52,10 +52,10 @@ def _unit_from_source(source: UnitSource) -> UnitExpr:
         return source
 
     if isinstance(source, str) or source is None:
-        return unit(source)
+        return parse_unit(source)
 
     if hasattr(source, "unit"):
-        return unit(source.unit)
+        return parse_unit(source.unit)
 
     raise TypeError(
         "Unit sources must be UnitExpr, str, None, or an object with '.unit'."

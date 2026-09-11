@@ -5,9 +5,9 @@ import pytest
 from pycuc.algebra import (
     are_compatible,
     infer_unit_string,
+    parse_unit,
     power_unit,
     simplify_unit,
-    unit,
 )
 
 
@@ -50,13 +50,13 @@ def test_non_integer_power() -> None:
 
 
 def test_direct_algebra() -> None:
-    assert str(unit("J/mol") / unit("K")) == "J/(mol.K)"
-    assert str(unit("m/s") ** 2) == "m^2/s^2"
+    assert str(parse_unit("J/mol") / parse_unit("K")) == "J/(mol.K)"
+    assert str(parse_unit("m/s") ** 2) == "m^2/s^2"
 
 
 def test_dimensionless_aliases() -> None:
     for value in (None, "", "None", "1", "dimensionless", "unitless"):
-        assert unit(value).is_dimensionless
+        assert parse_unit(value).is_dimensionless
 
 
 def test_compatibility() -> None:

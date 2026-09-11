@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from .parser import unit
+from .parser import parse_unit
 from .unit import UnitExpr
 
 
@@ -15,7 +15,7 @@ def are_compatible(
     Conversion-aware compatibility (for example J/mol versus kJ/mol) should
     later delegate to PyCUC's conversion registry.
     """
-    return unit(left) == unit(right)
+    return parse_unit(left) == parse_unit(right)
 
 
 def require_compatible(
@@ -25,8 +25,8 @@ def require_compatible(
     context: str | None = None,
 ) -> UnitExpr:
     """Validate compatibility and return the normalized left-hand unit."""
-    left_unit = unit(left)
-    right_unit = unit(right)
+    left_unit = parse_unit(left)
+    right_unit = parse_unit(right)
 
     if left_unit != right_unit:
         suffix = f" for {context}" if context else ""

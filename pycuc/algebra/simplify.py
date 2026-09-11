@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from .parser import unit
+from .parser import parse_unit
 from .unit import ExponentInput, UnitExpr
 
 
@@ -11,7 +11,7 @@ def simplify_unit(
     power_style: str = "fraction",
 ) -> str:
     """Parse, simplify, and format a unit expression."""
-    return unit(value).format(
+    return parse_unit(value).format(
         dimensionless=dimensionless,
         power_style=power_style,
     )
@@ -26,7 +26,7 @@ def multiply_units(
     result = UnitExpr.dimensionless()
 
     for value in values:
-        result = result * unit(value)
+        result = result * parse_unit(value)
 
     return result.format(
         dimensionless=dimensionless,
@@ -42,7 +42,7 @@ def divide_units(
     power_style: str = "fraction",
 ) -> str:
     """Divide two unit expressions and return the simplified unit."""
-    return (unit(numerator) / unit(denominator)).format(
+    return (parse_unit(numerator) / parse_unit(denominator)).format(
         dimensionless=dimensionless,
         power_style=power_style,
     )
@@ -56,7 +56,7 @@ def power_unit(
     power_style: str = "fraction",
 ) -> str:
     """Raise a unit expression to an integer or non-integer power."""
-    return (unit(value) ** power).format(
+    return (parse_unit(value) ** power).format(
         dimensionless=dimensionless,
         power_style=power_style,
     )
