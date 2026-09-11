@@ -122,8 +122,6 @@ class UnitExpr:
         numerator: list[str] = []
         denominator: list[str] = []
 
-        # Preserve insertion order. This keeps chemically meaningful forms
-        # such as J/(mol.K) and mol/(m^2.s.Pa).
         for symbol, exponent in self.powers.items():
             if exponent > 0:
                 numerator.append(_format_power(symbol, exponent, power_style))
@@ -146,9 +144,9 @@ def _coerce_unit(value: UnitExpr | str | None) -> UnitExpr:
     if isinstance(value, UnitExpr):
         return value
 
-    from .parser import unit
+    from .parser import parse_unit
 
-    return unit(value)
+    return parse_unit(value)
 
 
 def _format_power(
