@@ -47,7 +47,7 @@ def normalize_unit_text(value: str | None) -> str:
     return re.sub(r"\s+", "", text)
 
 
-def unit(value: UnitExpr | str | None) -> UnitExpr:
+def parse_unit(value: UnitExpr | str | None) -> UnitExpr:
     """Parse a unit string into a normalized UnitExpr."""
     if isinstance(value, UnitExpr):
         return value
@@ -57,9 +57,6 @@ def unit(value: UnitExpr | str | None) -> UnitExpr:
         return UnitExpr.dimensionless()
 
     return UnitParser(text).parse()
-
-
-parse_unit = unit
 
 
 class UnitParser:
