@@ -2,7 +2,6 @@ from pycuc.algebra import infer_unit_string
 from fractions import Fraction
 from rich import print
 from pycuc.algebra import (
-    unit,
     simplify_unit,
     multiply_units,
     divide_units,

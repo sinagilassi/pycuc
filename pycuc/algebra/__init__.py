@@ -2,7 +2,7 @@
 
 from .compatibility import are_compatible, require_compatible
 from .expression import HasUnit, infer_unit, infer_unit_string
-from .parser import parse_unit, unit
+from .parser import parse_unit
 from .simplify import divide_units, multiply_units, power_unit, simplify_unit
 from .unit import ExponentInput, UnitExpr
 
@@ -19,5 +19,4 @@ __all__ = [
     "power_unit",
     "require_compatible",
     "simplify_unit",
-    "unit",
 ]
