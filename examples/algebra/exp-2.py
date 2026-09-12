@@ -194,10 +194,10 @@ print(
 #     },
 # )
 
-infer_unit_string(
+print(infer_unit_string(
     "exp(-alpha * tau)",
     {
         "alpha": "dimensionless",
         "tau": "dimensionless",
     },
-)
+))
