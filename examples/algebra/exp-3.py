@@ -80,3 +80,16 @@ print(
     )
 )
 # N
+
+# NOTE: simplification
+print(
+    infer_unit_string(
+        "force / (mass * acceleration)",
+        {
+            "force": "N",
+            "mass": "kg",
+            "acceleration": "m/s^2",
+        },
+    )
+)
+# dimensionless
