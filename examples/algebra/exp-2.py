@@ -13,6 +13,7 @@ from pycuc.algebra import (
 from pycuc import convert_from_to, from_to
 
 # NOTE: Ideal gas law unit inference
+print(f"--- Ideal gas law unit inference ---")
 print(
     infer_unit_string(
         "n * R * T / V",
@@ -26,6 +27,7 @@ print(
 )
 
 # NOTE: Van der Waals equation unit inference
+print(f"--- Van der Waals equation unit inference ---")
 print(
     infer_unit_string(
         "n * R * T / (V - n * b)",
@@ -40,6 +42,7 @@ print(
 )
 
 # NOTE: attraction term
+print(f"[blue]--- attraction term unit inference ---[/blue]")
 print(
     infer_unit_string(
         "a * n**2 / V**2",
@@ -52,6 +55,7 @@ print(
 )
 
 # NOTE: PR term
+print(f"[blue]--- PR term unit inference ---[/blue]")
 print(
     infer_unit_string(
         "a_alpha / denominator",
@@ -74,6 +78,8 @@ print(
 )
 
 # NOTE: thermodynamics
+print(f"[blue]--- thermodynamics unit inference ---[/blue]")
+
 print(
     infer_unit_string(
         "delta_h - T * delta_s",
@@ -97,6 +103,7 @@ print(
 )
 
 # NOTE: density
+print(f"[blue]--- density unit inference ---[/blue]")
 print(
     infer_unit_string(
         "rho * velocity * length / mu",
@@ -129,6 +136,7 @@ print(
 )
 
 # NOTE: heat transfer
+print(f"[blue]--- heat transfer unit inference ---[/blue]")
 print(
     infer_unit_string(
         "h * L / k",
@@ -141,6 +149,7 @@ print(
 )
 
 # NOTE: mass transfer
+print(f"[blue]--- mass transfer unit inference ---[/blue]")
 print(
     infer_unit_string(
         "kc * L / D",
@@ -164,6 +173,7 @@ print(
 )
 
 # NOTE: NRTL
+print(f"[blue]--- NRTL unit inference ---[/blue]")
 print(
     infer_unit_string(
         "(g_ij - g_jj) / (R * T)",
@@ -176,17 +186,18 @@ print(
     )
 )
 
+# ! raise error as the argument of exp must be dimensionless
+# infer_unit_string(
+#     "exp(-energy)",
+#     {
+#         "energy": "J/mol",
+#     },
+# )
+
 infer_unit_string(
     "exp(-alpha * tau)",
     {
         "alpha": "dimensionless",
         "tau": "dimensionless",
-    },
-)
-
-infer_unit_string(
-    "exp(-energy)",
-    {
-        "energy": "J/mol",
     },
 )
