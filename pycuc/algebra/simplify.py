@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from .derived import reduce_derived_unit
 from .parser import parse_unit
 from .unit import ExponentInput, UnitExpr
 
@@ -7,11 +8,16 @@ from .unit import ExponentInput, UnitExpr
 def simplify_unit(
     value: UnitExpr | str | None,
     *,
+    derived: bool = True,
     dimensionless: str = "dimensionless",
     power_style: str = "fraction",
 ) -> str:
-    """Parse, simplify, and format a unit expression."""
-    return parse_unit(value).format(
+    """Parse, simplify, optionally reduce derived SI units, and format."""
+    result = parse_unit(value)
+    if derived:
+        result = reduce_derived_unit(result)
+
+    return result.format(
         dimensionless=dimensionless,
         power_style=power_style,
     )
@@ -19,6 +25,7 @@ def simplify_unit(
 
 def multiply_units(
     *values: UnitExpr | str | None,
+    derived: bool = True,
     dimensionless: str = "dimensionless",
     power_style: str = "fraction",
 ) -> str:
@@ -27,6 +34,9 @@ def multiply_units(
 
     for value in values:
         result = result * parse_unit(value)
+
+    if derived:
+        result = reduce_derived_unit(result)
 
     return result.format(
         dimensionless=dimensionless,
@@ -38,11 +48,16 @@ def divide_units(
     numerator: UnitExpr | str | None,
     denominator: UnitExpr | str | None,
     *,
+    derived: bool = True,
     dimensionless: str = "dimensionless",
     power_style: str = "fraction",
 ) -> str:
     """Divide two unit expressions and return the simplified unit."""
-    return (parse_unit(numerator) / parse_unit(denominator)).format(
+    result = parse_unit(numerator) / parse_unit(denominator)
+    if derived:
+        result = reduce_derived_unit(result)
+
+    return result.format(
         dimensionless=dimensionless,
         power_style=power_style,
     )
@@ -52,11 +67,16 @@ def power_unit(
     value: UnitExpr | str | None,
     power: ExponentInput,
     *,
+    derived: bool = True,
     dimensionless: str = "dimensionless",
     power_style: str = "fraction",
 ) -> str:
     """Raise a unit expression to an integer or non-integer power."""
-    return (parse_unit(value) ** power).format(
+    result = parse_unit(value) ** power
+    if derived:
+        result = reduce_derived_unit(result)
+
+    return result.format(
         dimensionless=dimensionless,
         power_style=power_style,
     )
