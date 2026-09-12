@@ -1,6 +1,7 @@
 """Symbolic unit algebra for PyCUC."""
 
 from .compatibility import are_compatible, require_compatible
+from .derived import reduce_derived_unit
 from .expression import HasUnit, infer_unit, infer_unit_string
 from .parser import parse_unit
 from .simplify import divide_units, multiply_units, power_unit, simplify_unit
@@ -17,6 +18,7 @@ __all__ = [
     "multiply_units",
     "parse_unit",
     "power_unit",
+    "reduce_derived_unit",
     "require_compatible",
     "simplify_unit",
 ]

@@ -5,6 +5,7 @@ from fractions import Fraction
 from typing import Mapping, Protocol, runtime_checkable
 
 from .compatibility import require_compatible
+from .derived import reduce_derived_unit
 from .parser import parse_unit
 from .unit import UnitExpr, to_fraction
 
@@ -50,22 +51,11 @@ def infer_unit(
     units: Mapping[str, UnitSource],
 ) -> UnitExpr:
     """
-    Infer the result unit of a mathematical expression.
+    Infer the symbolic result unit of a mathematical expression.
 
-    Supported operators
-    -------------------
-    +, -, *, /, **, unary +/-. Addition/subtraction require compatible units.
-
-    Supported functions
-    -------------------
-    sqrt(x)
-        Returns ``unit(x) ** 1/2``.
-    cbrt(x)
-        Returns ``unit(x) ** 1/3``.
-    abs(x), fabs(x)
-        Preserve the input unit.
-    exp(x), log(x), ln(x), log10(x), trigonometric and hyperbolic functions
-        Require a dimensionless argument and return dimensionless.
+    This function performs algebraic cancellation only. Use
+    :func:`infer_unit_string` with ``derived=True`` (default) to additionally
+    reduce recognizable composites to preferred SI-derived symbols.
     """
     tree = ast.parse(expression, mode="eval")
     return _infer_node(tree.body, units)
@@ -75,11 +65,16 @@ def infer_unit_string(
     expression: str,
     units: Mapping[str, UnitSource],
     *,
+    derived: bool = True,
     dimensionless: str = "dimensionless",
     power_style: str = "fraction",
 ) -> str:
-    """Infer and format the result unit of a mathematical expression."""
-    return infer_unit(expression, units).format(
+    """Infer, optionally reduce derived SI units, and format the result unit."""
+    result = infer_unit(expression, units)
+    if derived:
+        result = reduce_derived_unit(result)
+
+    return result.format(
         dimensionless=dimensionless,
         power_style=power_style,
     )
