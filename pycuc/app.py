@@ -302,8 +302,13 @@ def to(
     '''
     try:
         # check conversion block
-        from_unit, block_symbol, to_unit = Utils(
-        ).parse_conversion_block(unit_conversion_block)
+        (
+            from_unit,
+            block_symbol,
+            to_unit
+        ) = Utils().parse_conversion_block(
+            unit_conversion_block
+        )
 
         return convert_from_to(value, from_unit, to_unit, reference)
 
