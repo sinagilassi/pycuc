@@ -366,6 +366,8 @@ class Refs:
         'BTU/hr*ft2*F': 0.1761101838,  # with asterisk notation
         'BTU/hr.ft^2.F': 0.1761101838,  # with caret notation
         'BTU/hr*ft^2*F': 0.1761101838,  # with caret and asterisk notation
+        'BTU/(hr.ft².F)': 0.1761101838,
+        'BTU/hr.ft².F': 0.1761101838,
 
         # thermal engineering
         'kcal/(hr.m2.K)': 0.859845,
@@ -374,6 +376,12 @@ class Refs:
         'kcal/(hr*m²*K)': 0.859845,  # with asterisk notation
         'kcal/(hr.m^2.K)': 0.859845,  # with caret notation
         'kcal/(hr*m^2*K)': 0.859845,  # with caret and asterisk notation
+        'kcal/hr.m2.K': 0.859845,
+        'kcal/hr*m2*K': 0.859845,
+        'kcal/hr.m².K': 0.859845,
+        'kcal/hr*m²*K': 0.859845,
+        'kcal/hr.m^2.K': 0.859845,
+        'kcal/hr*m^2*K': 0.859845,
     }
 
     # SECTION: Volume Conversions
