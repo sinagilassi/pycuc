@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import ast
 from fractions import Fraction
-from typing import Mapping, Protocol, runtime_checkable
+from typing import Literal, Mapping, Protocol, runtime_checkable
 
+from .base import expand_to_base_units
 from .compatibility import require_compatible
 from .derived import reduce_derived_unit
 from .parser import parse_unit
@@ -18,6 +19,7 @@ class HasUnit(Protocol):
 
 
 UnitSource = UnitExpr | str | None | HasUnit
+UnitStyle = Literal["derived", "base", "raw"]
 
 
 _DIMENSIONLESS_UNARY_FUNCTIONS = {
@@ -54,8 +56,7 @@ def infer_unit(
     Infer the symbolic result unit of a mathematical expression.
 
     This function performs algebraic cancellation only. Use
-    :func:`infer_unit_string` with ``derived=True`` (default) to additionally
-    reduce recognizable composites to preferred SI-derived symbols.
+    :func:`infer_unit_string` to choose the final representation style.
     """
     tree = ast.parse(expression, mode="eval")
     return _infer_node(tree.body, units)
@@ -65,14 +66,40 @@ def infer_unit_string(
     expression: str,
     units: Mapping[str, UnitSource],
     *,
-    derived: bool = True,
+    unit_style: UnitStyle = "derived",
+    derived: bool | None = None,
     dimensionless: str = "dimensionless",
     power_style: str = "fraction",
 ) -> str:
-    """Infer, optionally reduce derived SI units, and format the result unit."""
+    """Infer and format the result unit using the requested representation.
+
+    Parameters
+    ----------
+    unit_style : {"derived", "base", "raw"}, default="derived"
+        ``"derived"`` reduces recognizable composites to preferred SI-derived
+        symbols, e.g. ``kg.m/s^2 -> N`` and ``J/m^3 -> Pa``.
+        ``"base"`` expands supported derived symbols to SI base units, e.g.
+        ``N -> kg.m/s^2`` and ``Pa -> kg/(m.s^2)``.
+        ``"raw"`` performs symbolic cancellation only.
+    derived : bool | None, optional
+        Backward-compatible alias. ``True`` maps to ``unit_style="derived"``
+        and ``False`` maps to ``unit_style="raw"``. Prefer ``unit_style`` for
+        new code.
+    """
+    if derived is not None:
+        unit_style = "derived" if derived else "raw"
+
+    if unit_style not in {"derived", "base", "raw"}:
+        raise ValueError(
+            "unit_style must be one of 'derived', 'base', or 'raw'."
+        )
+
     result = infer_unit(expression, units)
-    if derived:
+
+    if unit_style == "derived":
         result = reduce_derived_unit(result)
+    elif unit_style == "base":
+        result = expand_to_base_units(result)
 
     return result.format(
         dimensionless=dimensionless,
