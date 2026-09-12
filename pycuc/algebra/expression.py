@@ -76,11 +76,11 @@ def infer_unit_string(
     Parameters
     ----------
     unit_style : {"derived", "base", "raw"}, default="derived"
-        ``"derived"`` reduces recognizable composites to preferred SI-derived
-        symbols, e.g. ``kg.m/s^2 -> N`` and ``J/m^3 -> Pa``.
-        ``"base"`` expands supported derived symbols to SI base units, e.g.
-        ``N -> kg.m/s^2`` and ``Pa -> kg/(m.s^2)``.
-        ``"raw"`` performs symbolic cancellation only.
+        ``"derived"`` canonicalizes through SI base dimensions and then reduces
+        recognizable composites to preferred SI-derived symbols. This lets
+        mixed representations cancel correctly, e.g. ``N/(kg.m/s^2) -> 1``.
+        ``"base"`` expands supported derived symbols to SI base units.
+        ``"raw"`` preserves the direct symbolic algebra result.
     derived : bool | None, optional
         Backward-compatible alias. ``True`` maps to ``unit_style="derived"``
         and ``False`` maps to ``unit_style="raw"``. Prefer ``unit_style`` for
@@ -97,7 +97,7 @@ def infer_unit_string(
     result = infer_unit(expression, units)
 
     if unit_style == "derived":
-        result = reduce_derived_unit(result)
+        result = reduce_derived_unit(expand_to_base_units(result))
     elif unit_style == "base":
         result = expand_to_base_units(result)
 
@@ -211,7 +211,8 @@ def _require_arg_count(
 
 
 def _require_dimensionless(unit_expr: UnitExpr, function_name: str) -> None:
-    if not unit_expr.is_dimensionless:
+    normalized = expand_to_base_units(unit_expr)
+    if not normalized.is_dimensionless:
         raise ValueError(
             f"{function_name}() requires a dimensionless argument, "
             f"got {unit_expr.format()!r}."

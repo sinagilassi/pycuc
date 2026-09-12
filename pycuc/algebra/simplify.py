@@ -21,7 +21,7 @@ def _apply_unit_style(
         unit_style = "derived" if derived else "raw"
 
     if unit_style == "derived":
-        return reduce_derived_unit(value)
+        return reduce_derived_unit(expand_to_base_units(value))
     if unit_style == "base":
         return expand_to_base_units(value)
     if unit_style == "raw":
