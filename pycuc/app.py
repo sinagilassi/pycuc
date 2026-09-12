@@ -15,6 +15,7 @@ from .docs import (
     Utils,
     Refs
 )
+from .utils import _normalize_conversion_unit
 
 # NOTE: setup logger
 logger = logging.getLogger(__name__)
@@ -179,6 +180,8 @@ def create_cuc(
     '''
     return CustomUnitConverter(value, unit)
 
+# ! ::: Convert from one unit to another
+
 
 def convert_from_to(
     value: float,
@@ -220,11 +223,16 @@ def convert_from_to(
     >>> print(pycuc.convert_from_to(25, 'C', 'K'))
     '''
     try:
+        # normalize the from_unit
+        from_unit = _normalize_conversion_unit(from_unit)
+        # normalize the to_unit
+        to_unit = _normalize_conversion_unit(to_unit)
+
         # custom object
-        CustomUnitConverterC = CustomUnitConverter(value, from_unit)
+        converter = CustomUnitConverter(value, from_unit)
 
         # conversion
-        return CustomUnitConverterC.convert(to_unit, reference)
+        return converter.convert(to_unit, reference)
 
     except Exception as e:
         raise Exception('Conversion failed, ', e)
