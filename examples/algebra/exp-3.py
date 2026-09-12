@@ -52,18 +52,31 @@ print(
 )
 # N
 
+# ! unit style: base
 print(
     infer_unit_string(
         "k * x",
         units,
+        unit_style="derived"
     )
 )
 # N
+
+# ! unit style: derived
+print(
+    infer_unit_string(
+        "k * x",
+        units,
+        unit_style="base"
+    )
+)
+# kg.m/s^2
 
 print(
     infer_unit_string(
         "m * d2x_dt2 + c * dx_dt + k * x",
         units,
+        unit_style="base"
     )
 )
 # N
