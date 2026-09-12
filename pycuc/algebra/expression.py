@@ -19,6 +19,32 @@ class HasUnit(Protocol):
 UnitSource = UnitExpr | str | None | HasUnit
 
 
+_DIMENSIONLESS_UNARY_FUNCTIONS = {
+    "exp",
+    "log",
+    "ln",
+    "log10",
+    "sin",
+    "cos",
+    "tan",
+    "asin",
+    "acos",
+    "atan",
+    "sinh",
+    "cosh",
+    "tanh",
+    "asinh",
+    "acosh",
+    "atanh",
+}
+
+
+_UNIT_PRESERVING_UNARY_FUNCTIONS = {
+    "abs",
+    "fabs",
+}
+
+
 def infer_unit(
     expression: str,
     units: Mapping[str, UnitSource],
@@ -26,8 +52,20 @@ def infer_unit(
     """
     Infer the result unit of a mathematical expression.
 
-    Supported operators are +, -, *, /, **, unary +/- and sqrt(...).
-    Addition/subtraction require compatible operand units.
+    Supported operators
+    -------------------
+    +, -, *, /, **, unary +/-. Addition/subtraction require compatible units.
+
+    Supported functions
+    -------------------
+    sqrt(x)
+        Returns ``unit(x) ** 1/2``.
+    cbrt(x)
+        Returns ``unit(x) ** 1/3``.
+    abs(x), fabs(x)
+        Preserve the input unit.
+    exp(x), log(x), ln(x), log10(x), trigonometric and hyperbolic functions
+        Require a dimensionless argument and return dimensionless.
     """
     tree = ast.parse(expression, mode="eval")
     return _infer_node(tree.body, units)
@@ -99,17 +137,63 @@ def _infer_node(
         raise TypeError(f"Unsupported binary operator: {type(node.op).__name__}.")
 
     if isinstance(node, ast.Call):
-        if (
-            isinstance(node.func, ast.Name)
-            and node.func.id == "sqrt"
-            and len(node.args) == 1
-            and not node.keywords
-        ):
-            return _infer_node(node.args[0], units) ** Fraction(1, 2)
-
-        raise TypeError("Only sqrt(x) is supported as a unit-aware function call.")
+        return _infer_function_call(node, units)
 
     raise TypeError(f"Unsupported expression node: {type(node).__name__}.")
+
+
+def _infer_function_call(
+    node: ast.Call,
+    units: Mapping[str, UnitSource],
+) -> UnitExpr:
+    if not isinstance(node.func, ast.Name):
+        raise TypeError("Only direct function calls such as exp(x) are supported.")
+
+    function_name = node.func.id
+
+    if node.keywords:
+        raise TypeError("Keyword arguments are not supported in unit-aware calls.")
+
+    if function_name == "sqrt":
+        _require_arg_count(function_name, node.args, 1)
+        return _infer_node(node.args[0], units) ** Fraction(1, 2)
+
+    if function_name == "cbrt":
+        _require_arg_count(function_name, node.args, 1)
+        return _infer_node(node.args[0], units) ** Fraction(1, 3)
+
+    if function_name in _UNIT_PRESERVING_UNARY_FUNCTIONS:
+        _require_arg_count(function_name, node.args, 1)
+        return _infer_node(node.args[0], units)
+
+    if function_name in _DIMENSIONLESS_UNARY_FUNCTIONS:
+        _require_arg_count(function_name, node.args, 1)
+        argument_unit = _infer_node(node.args[0], units)
+        _require_dimensionless(argument_unit, function_name)
+        return UnitExpr.dimensionless()
+
+    raise TypeError(
+        f"Unsupported unit-aware function call: {function_name}(...)."
+    )
+
+
+def _require_arg_count(
+    function_name: str,
+    args: list[ast.expr],
+    expected: int,
+) -> None:
+    if len(args) != expected:
+        raise TypeError(
+            f"{function_name}() expects {expected} argument(s), got {len(args)}."
+        )
+
+
+def _require_dimensionless(unit_expr: UnitExpr, function_name: str) -> None:
+    if not unit_expr.is_dimensionless:
+        raise ValueError(
+            f"{function_name}() requires a dimensionless argument, "
+            f"got {unit_expr.format()!r}."
+        )
 
 
 def _numeric_exponent(node: ast.AST) -> Fraction:
