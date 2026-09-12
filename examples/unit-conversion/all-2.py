@@ -1,6 +1,7 @@
 # import packages/modules
 import os
 import pycuc
+from rich import print
 
 # check version
 print(pycuc.__version__)
@@ -13,8 +14,10 @@ print(pycuc.check_reference('pressure'))
 # =====================================
 # LOAD CUSTOM UNIT FROM YML
 # =====================================
+# current directory
+current_dir = os.path.dirname(os.path.abspath(__file__))
 # load unit yml file
-unit_file = os.path.join(os.getcwd(), 'test', 'custom-unit.yml')
+unit_file = os.path.join(current_dir, 'custom-unit.yml')
 my_cuc = pycuc.go(reference_file=unit_file)
 
 # =====================================

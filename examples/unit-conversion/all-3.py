@@ -1,5 +1,6 @@
 # import packages/modules
 import pycuc
+from rich import print
 
 # check version
 print(pycuc.__version__)

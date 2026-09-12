@@ -57,8 +57,8 @@ res = pycuc.to(1, 'kcal/(hr.m2.K) => W/m2.K')
 print(f"1 kcal/(hr.m2.K) = {res} W/m2.K")
 
 # unicode aliases
+print(f"Unicode aliases:")
 res = pycuc.to(1, 'W/m\u00B2.K => W/ft\u00B2.K')
 print(f"1 W/m\u00B2.K = {res} W/ft\u00B2.K")
 res = pycuc.to(1, 'BTU/(hr.ft\u00B2.F) => W/m\u00B2.K')
 print(f"1 BTU/(hr.ft\u00B2.F) = {res} W/m\u00B2.K")
-
