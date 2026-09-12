@@ -90,7 +90,7 @@ print(
 )
 
 # ! to kj
-print(from_to(
+print(convert_from_to(
     value=1,
     from_unit="J/(mol.K)",
     to_unit="kJ/(mol.K)",
