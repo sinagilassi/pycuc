@@ -9,6 +9,7 @@ from pycuc.algebra import (
     parse_unit,
     infer_unit_string,
 )
+from pycuc import convert_from_to, from_to
 
 
 # 1. Simplify a unit
@@ -87,3 +88,10 @@ print(
         },
     )
 )
+
+# ! to kj
+print(from_to(
+    value=1,
+    from_unit="J/(mol.K)",
+    to_unit="kJ/(mol.K)",
+))
